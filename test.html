@@ -2,189 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Builder </title>
+    <title>Resume Builder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+ <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <br>
     <center>
-        <h2 class="head">Resume Builder</h2>
+        <h2>Resume Builder</h2>
+        <button onclick="getInput()">Generate Resume</button>
     </center>
-    <br>
+    
+    <div id="resume-output" class="box"></div>
+    
+    <center>
+        <button id="download-btn" onclick="downloadPDF()" style="display: none;">Download PDF</button>
+    </center>
 
-    <div class="box">
-        <!-- javascript starts here -->
-        <script>
-            function getInput() {
-                let a = prompt("Enter your full name: ");
-                let b = prompt("Enter your address: ");
-                let c, pt;
-                do {
-                    c = prompt("Enter your phone number: ");
-                    pt = parseInt(c);
-                    if (c.length !== 10 || isNaN(c)) {
-                        alert("Invalid phone number. Please enter a 10-digit phone number.");
-                    }
-                } while (c.length !== 10 || isNaN(c));
-                
-                let d;
-                do {
-                    d = prompt("Enter your Email Id: ");
-                    if (!d.endsWith("@gmail.com")) {
-                        alert("Invalid email. Please enter an email ending with '@gmail.com'.");
-                    }
-                } while (!d.endsWith("@gmail.com"));
-                
-                let uni = prompt("Enter your university name: ");
+    <script>
+        function getInput() {
+            let outputDiv = document.getElementById("resume-output");
+            outputDiv.innerHTML = ""; // Clear previous content
 
-                document.write("<h1>Myself: </h1>" + a);
-                document.write("<br>");
-                document.write("<br>");
-
-                document.write("<h1>Address: </h1>" + b);
-                document.write("<br>");
-                document.write("<br>");
-
-                document.write("<h1>Phone Number: </h1>" + pt);
-                document.write("<br>");
-                document.write("<br>");
-
-                document.write("<h1>Email Id: </h1>" + d);
-                document.write("<br>");
-                document.write("<br>");
-
-                document.write("<h1>Education: </h1>");
-                document.write("<h1>Bachelor of Computer Science and Engineering in</h1>" + uni);
-                document.write("<br>");
-                document.write("<br>");
-
-                document.write("<h1>Objective: </h1>");
-                document.write("<h1>A motivated and detail-oriented Computer Science Engineering student with a strong foundation in programming, software development, and automation tools. Driven by a goal to learn, grow, and deliver quality software solutions through exceptional problem-solving abilities. Seeking an industry position to fully utilize technical skills while contributing to innovative projects. Committed to building a successful corporate career and unlocking true potential by embracing challenges and continuous learning.</h1>");
-                document.write("<br>");
-                document.write("<br>");
-
-                let skillsInput = prompt("Enter your skills separated by commas: ");
-                let skills = skillsInput.split(',');
-                document.write("<ul type='disc'>");
-                if (skills.length > 0) {
-                    document.write("<h1>Skills: </h1>");
-                    skills.forEach(skill => {
-                        document.write("<h1><pre><li>"+ skill.trim() +"</li></pre></h1>");
-                    });
-                } else {
-                    document.write("<h1>No skills entered.</h1>");
-                    document.write("<br>");
+            let name = prompt("Enter your full name: ");
+            let address = prompt("Enter your address: ");
+            
+            let phone;
+            do {
+                phone = prompt("Enter your phone number: ");
+                if (phone.length !== 10 || isNaN(phone)) {
+                    alert("Invalid phone number. Please enter a 10-digit phone number.");
                 }
-                document.write("</ul>");
-                document.write("<br>");
-                
+            } while (phone.length !== 10 || isNaN(phone));
+
+            let email;
+            do {
+                email = prompt("Enter your Email Id: ");
+                if (!email.endsWith("@gmail.com")) {
+                    alert("Invalid email. Please enter an email ending with '@gmail.com'.");
+                }
+            } while (!email.endsWith("@gmail.com"));
+
+            let university = prompt("Enter your university name: ");
+            let skillsInput = prompt("Enter your skills separated by commas: ");
+            let skills = skillsInput.split(',').map(skill => skill.trim());
 
             let proCount = prompt("How many projects have you worked on?");
-            if (isNaN(proCount) || proCount <= 0) {
-                alert("Invalid number of projects. Please enter a positive number.");
-                proCount = 0;
-            }
-
+            let projects = [];
             for (let i = 1; i <= proCount; i++) {
                 let proName = prompt("Enter the name of project " + i + ": ");
                 let proDetails = prompt("Enter the details for project " + i + ": ");
-                document.write("<h1>Project " + i + ": </h1>" + proName);
-                document.write("<br>");
-                document.write("<h1><pre>Details: </pre></h1>" + proDetails);
-                document.write("<br>");
-                document.write("<br>");
+                projects.push({ name: proName, details: proDetails });
             }
 
-                let pro1 = prompt("Enter your work experience: ");
-                document.write("<h1>Work Experience: </h1>" + pro1);
-                document.write("<br>");
-                document.write("<br>");
-                document.write("<h1>Thank you for reviewing my resume, I am available upon request.</h1>");
-                document.write("<br>");
-                document.write("<br>");
-                document.write("<br>");
-            
-            let pro4 = prompt("Enter your other languages in which you are skilled: ");
-            document.write("<h1>Languages: </h1>" + pro4);
-            document.write("<br>");
-            document.write("<br>");
-            }
-            
-            getInput();
-        </script>
-        <!-- End javascript here -->
-    </div>
-    <!-- Styling the resume builder -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
+            let workExperience = prompt("Enter your work experience: ");
+            let languages = prompt("Enter your other languages in which you are skilled: ");
+
+            // Display output on the webpage
+            outputDiv.innerHTML += `<h3>Name: ${name}</h3>`;
+            outputDiv.innerHTML += `<h3>Address: ${address}</h3>`;
+            outputDiv.innerHTML += `<h3>Phone: ${phone}</h3>`;
+            outputDiv.innerHTML += `<h3>Email: ${email}</h3>`;
+            outputDiv.innerHTML += `<h3>University: ${university}</h3>`;
+
+            outputDiv.innerHTML += `<h3>Skills:</h3><ul>`;
+            skills.forEach(skill => {
+                outputDiv.innerHTML += `<li>${skill}</li>`;
+            });
+            outputDiv.innerHTML += `</ul>`;
+
+            outputDiv.innerHTML += `<h3>Projects:</h3>`;
+            projects.forEach((project, index) => {
+                outputDiv.innerHTML += `<p><b>Project ${index + 1}:</b> ${project.name}</p>`;
+                outputDiv.innerHTML += `<p>Details: ${project.details}</p>`;
+            });
+
+            outputDiv.innerHTML += `<h3>Work Experience: ${workExperience}</h3>`;
+            outputDiv.innerHTML += `<h3>Languages: ${languages}</h3>`;
+            outputDiv.innerHTML += `<h3>Thank you for reviewing my resume!</h3>`;
+
+            // Show the "Download PDF" button
+            document.getElementById("download-btn").style.display = "block";
         }
 
-        body {
-            background-color: rgba(127, 255, 212, 0.533);
-            margin-left: 15px;
-            margin-right: 15px;
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            font-size: 20px;
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            let doc = new jsPDF();
+            let outputDiv = document.getElementById("resume-output");
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("Resume", 90, 10);
+
+            doc.setFontSize(12);
+            let yPosition = 20;
+
+            outputDiv.childNodes.forEach(node => {
+                if (node.tagName === "H3" || node.tagName === "P") {
+                    doc.text(node.textContent, 10, yPosition);
+                    yPosition += 10;
+                } else if (node.tagName === "UL") {
+                    node.childNodes.forEach(li => {
+                        doc.text("- " + li.textContent, 15, yPosition);
+                        yPosition += 10;
+                    });
+                }
+            });
+
+            doc.save("Resume.pdf");
         }
-        .head {
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            color: black;
-            font-size: 25px;
-        }
-        .head2 {
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            color: black;
-            font-size: 19px;
-        }
-        h1 {
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            font-size: 20px;
-            color: white;
-        }
-        /* test moving  */
-        h1 {
-            position: relative;
-        }
-        h1::after {
-            content: '|';
-            position: absolute;
-            right: 0;
-            color: white;
-            background-color: #0c0b14;
-            width: 100%;
-            animation: writing 13s ease-in forwards, blink 1s infinite;
-        }
-        @keyframes writing {
-            to {
-                width: 0%;
-            }
-        }
-        @keyframes blink {
-            40% {
-                color: transparent;
-            }
-        }
-        /* end test moving */
-        .box {
-            margin: auto;
-            width: 100%;
-            height: 100%;
-            background-color: #0c0b14;
-            padding-left: 30px;
-            padding-right: 50px;
-            padding-top: 30px;
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            color: white;
-        }
-        prompt{
-            color: red;
-            background-color: red;
-        }
-    </style>
-    <!-- End Styling the resume builder -->
+    </script>
+
 </body>
 </html>
