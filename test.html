@@ -3,116 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Builder</title>
+    <title>Resume Builder - Form</title>
+    <link rel="stylesheet" href="style.css"> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
- <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <center>
-        <h2>Resume Builder</h2>
-        <button onclick="getInput()">Generate Resume</button>
-    </center>
-    
-    <div id="resume-output" class="box"></div>
-    
-    <center>
-        <button id="download-btn" onclick="downloadPDF()" style="display: none;">Download PDF</button>
-    </center>
-
-    <script>
-        function getInput() {
-            let outputDiv = document.getElementById("resume-output");
-            outputDiv.innerHTML = ""; // Clear previous content
-
-            let name = prompt("Enter your full name: ");
-            let address = prompt("Enter your address: ");
+    <div class="resume-page">
+        <h2 class="form-header">Enter Your Resume Details</h2>
+        <form id="resume-form">
             
-            let phone;
-            do {
-                phone = prompt("Enter your phone number: ");
-                if (phone.length !== 10 || isNaN(phone)) {
-                    alert("Invalid phone number. Please enter a 10-digit phone number.");
-                }
-            } while (phone.length !== 10 || isNaN(phone));
+            <fieldset>
+                <legend>Personal Information</legend>
+                <input type="text" id="name" placeholder="Full Name" required>
+                <input type="email" id="email" placeholder="Email Address" required>
+                <input type="tel" id="phone" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required>
+                <input type="text" id="address" placeholder="Address" required>
+            </fieldset>
 
-            let email;
-            do {
-                email = prompt("Enter your Email Id: ");
-                if (!email.endsWith("@gmail.com")) {
-                    alert("Invalid email. Please enter an email ending with '@gmail.com'.");
-                }
-            } while (!email.endsWith("@gmail.com"));
+            <fieldset>
+                <legend>Education & Skills</legend>
+                <input type="text" id="university" placeholder="University/College Name" required>
+                <input type="text" id="skillsInput" placeholder="Skills (comma separated)" required>
+                <input type="text" id="languages" placeholder="Other Languages Skilled In (comma separated)">
+            </fieldset>
 
-            let university = prompt("Enter your university name: ");
-            let skillsInput = prompt("Enter your skills separated by commas: ");
-            let skills = skillsInput.split(',').map(skill => skill.trim());
+            <fieldset id="projects-section">
+                <legend>Projects</legend>
+                <button type="button" class="btn secondary-btn" onclick="addProjectInput()">Add Project</button>
+            </fieldset>
 
-            let proCount = prompt("How many projects have you worked on?");
-            let projects = [];
-            for (let i = 1; i <= proCount; i++) {
-                let proName = prompt("Enter the name of project " + i + ": ");
-                let proDetails = prompt("Enter the details for project " + i + ": ");
-                projects.push({ name: proName, details: proDetails });
-            }
+            <fieldset>
+                <legend>Experience</legend>
+                <textarea id="workExperience" rows="4" placeholder="Work Experience Details"></textarea>
+            </fieldset>
 
-            let workExperience = prompt("Enter your work experience: ");
-            let languages = prompt("Enter your other languages in which you are skilled: ");
+            <button type="submit" class="btn primary-btn large-btn">Generate Preview</button>
+        </form>
+    </div>
 
-            // Display output on the webpage
-            outputDiv.innerHTML += `<h3>Name: ${name}</h3>`;
-            outputDiv.innerHTML += `<h3>Address: ${address}</h3>`;
-            outputDiv.innerHTML += `<h3>Phone: ${phone}</h3>`;
-            outputDiv.innerHTML += `<h3>Email: ${email}</h3>`;
-            outputDiv.innerHTML += `<h3>University: ${university}</h3>`;
+    <div id="preview-section" class="resume-page" style="display: none; margin-top: 20px;">
+        <h2 class="form-header">Resume Preview</h2>
+        
+        <div id="resume-output"></div>
 
-            outputDiv.innerHTML += `<h3>Skills:</h3><ul>`;
-            skills.forEach(skill => {
-                outputDiv.innerHTML += `<li>${skill}</li>`;
-            });
-            outputDiv.innerHTML += `</ul>`;
+        <button id="download-btn" class="btn primary-btn large-btn" onclick="downloadPDF()">Download PDF</button>
+    </div>
 
-            outputDiv.innerHTML += `<h3>Projects:</h3>`;
-            projects.forEach((project, index) => {
-                outputDiv.innerHTML += `<p><b>Project ${index + 1}:</b> ${project.name}</p>`;
-                outputDiv.innerHTML += `<p>Details: ${project.details}</p>`;
-            });
-
-            outputDiv.innerHTML += `<h3>Work Experience: ${workExperience}</h3>`;
-            outputDiv.innerHTML += `<h3>Languages: ${languages}</h3>`;
-            outputDiv.innerHTML += `<h3>Thank you for reviewing my resume!</h3>`;
-
-            // Show the "Download PDF" button
-            document.getElementById("download-btn").style.display = "block";
-        }
-
-        function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-            let outputDiv = document.getElementById("resume-output");
-
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(16);
-            doc.text("Resume", 90, 10);
-
-            doc.setFontSize(12);
-            let yPosition = 20;
-
-            outputDiv.childNodes.forEach(node => {
-                if (node.tagName === "H3" || node.tagName === "P") {
-                    doc.text(node.textContent, 10, yPosition);
-                    yPosition += 10;
-                } else if (node.tagName === "UL") {
-                    node.childNodes.forEach(li => {
-                        doc.text("- " + li.textContent, 15, yPosition);
-                        yPosition += 10;
-                    });
-                }
-            });
-
-            doc.save("Resume.pdf");
-        }
-    </script>
+    <script src="script.js"></script>
 
 </body>
 </html>
+
