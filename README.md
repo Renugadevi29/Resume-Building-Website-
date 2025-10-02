@@ -37,10 +37,11 @@ open index.html   # macOS
 🏗️ Project Structure
 
 resume-builder/
-├── index.html          # Main HTML file
-├── style.css           # Custom styles
-├── test.js           # JavaScript logic for interactivity          
-└── README.md           # Project overview
+├── index.html       # Main HTML file
+|---input.html       #input from user 
+├── style.css        # Custom styles
+├── script.js        # JavaScript logic for interactivity          
+└── README.md        # Project overview
 
 
 📝 How to Use
@@ -63,10 +64,6 @@ Fork the repository and submit a pull request.
 👩‍💻 Author
 Renugadevi
 GitHub: Renugadevi29
-👥 Collaborators
-[@Renugadevi29](https://github.com/Renugadevi29)
-[@AmirthaVarshni26](https://github.com/AmirthaVarshni26)
-[@Murugalakshmi28](https://github.com/Murugalakshmi28)
 
 💡 Future Enhancements
 Add multiple resume templates/themes
